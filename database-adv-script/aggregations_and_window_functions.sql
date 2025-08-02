@@ -50,3 +50,15 @@ FROM
     PropertyBookingCounts
 ORDER BY
     booking_rank, number_of_bookings DESC;
+
+-- Replacing RANK() with ROW_NUMBER()
+
+SELECT
+    property_id,
+    name,
+    number_of_bookings,
+    ROW_NUMBER() OVER (ORDER BY number_of_bookings DESC) AS booking_rank
+FROM
+    PropertyBookingCounts
+ORDER BY
+    booking_rank;
