@@ -173,6 +173,70 @@ WHERE
 
 ```
 
+
+## SQL Aggregation and Window Functions
+
+These queries show how to use aggregation to summarize data and window functions to perform calculations across a set of table rows that are related to the current row.
+
+### **1. Aggregation with `COUNT` and `GROUP BY`**
+
+This query finds the total number of bookings made by each user. It uses a `COUNT()` function to aggregate the number of bookings per user, grouping the results by user ID and name.
+
+```
+
+`sql`
+
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    COUNT(b.booking_id) AS total_bookings
+FROM
+    User AS u
+INNER JOIN
+    Booking AS b ON u.user_id = b.user_id
+GROUP BY
+    u.user_id,
+    u.first_name,
+    u.last_name
+ORDER BY
+    total_bookings DESC;
+
+```
+
+### **2. Window Function with `RANK()`**
+
+This query ranks properties based on the total number of bookings they have received. A Common Table Expression (CTE) is used to first calculate the booking count for each property, and then the `RANK()` window function assigns a rank based on that count.
+
+```
+
+`sql`
+
+WITH PropertyBookingCounts AS (
+    SELECT
+        p.property_id,
+        p.name,
+        COUNT(b.booking_id) AS number_of_bookings
+    FROM
+        Property AS p
+    LEFT JOIN
+        Booking AS b ON p.property_id = b.property_id
+    GROUP BY
+        p.property_id,
+        p.name
+)
+SELECT
+    property_id,
+    name,
+    number_of_bookings,
+    RANK() OVER (ORDER BY number_of_bookings DESC) AS booking_rank
+FROM
+    PropertyBookingCounts
+ORDER BY
+    booking_rank, number_of_bookings DESC;
+
+```
+
 ## How to Use These Queries
 
 You can run these SQL queries against a database to practice and verify the results. the database must of course have a similar schema.
