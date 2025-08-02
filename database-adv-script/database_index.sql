@@ -56,3 +56,18 @@ CREATE INDEX idx_review_property_id ON Review(property_id);
 -- This is already included in your DDL.
 CREATE INDEX idx_payment_booking_id ON Payment(booking_id);
 
+-- Performing performance analysis
+
+EXPLAIN ANALYZE
+SELECT
+    p.property_id,
+    p.name AS property_name,
+    r.review_id,
+    r.rating,
+    r.comment
+FROM
+    Property AS p
+LEFT JOIN
+    Review AS r ON p.property_id = r.property_id
+ORDER BY
+    p.property_id;
