@@ -124,6 +124,55 @@ FULL OUTER JOIN
 
 ```
 
+
+## SQL Subqueries
+
+These queries demonstrate how to use subqueries to solve more complex data retrieval problems.
+
+### **1. Non-Correlated Subquery**
+
+This query finds all properties where the average rating is greater than 4.0. The inner subquery calculates the average rating for each property first, and the outer query then filters properties based on that result. This is a non-correlated subquery because the inner query can be executed independently.
+
+```
+
+`sql`
+SELECT
+    p.property_id,
+    p.name
+FROM
+    Property AS p
+WHERE
+    p.property_id IN (
+        SELECT
+            property_id
+        FROM
+            Review
+        GROUP BY
+            property_id
+        HAVING
+            AVG(rating) > 4.0
+    );
+
+```
+
+### **2. Correlated Subquery**
+
+This query finds all users who have made more than 3 bookings. This is a correlated subquery because the inner query depends on the outer query for its value. For each user selected in the outer query, the inner query is executed to count their specific bookings.
+
+```
+
+`sql`
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name
+FROM
+    User AS u
+WHERE
+    (SELECT COUNT(*) FROM Booking AS b WHERE b.user_id = u.user_id) > 3;
+
+```
+
 ## How to Use These Queries
 
 You can run these SQL queries against a database to practice and verify the results. the database must of course have a similar schema.
