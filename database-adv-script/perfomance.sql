@@ -48,6 +48,7 @@ ORDER BY
 -- (b.user_id, b.property_id, pmt.booking_id).
 -- This refactored version is presented for clarity and demonstrates
 -- the same logic using explicit table aliases for improved readability.
+-- This version also includes a WHERE clause to filter the results.
 -- When the database has the appropriate indexes, both queries should
 -- have similar, highly efficient execution plans.
 
@@ -73,6 +74,7 @@ INNER JOIN Property AS p
     ON b.property_id = p.property_id
 INNER JOIN Payment AS pmt
     ON b.booking_id = pmt.booking_id
+WHERE
+    b.total_price > 500.00 AND b.status = 'confirmed'
 ORDER BY
     b.booking_id DESC;
-
